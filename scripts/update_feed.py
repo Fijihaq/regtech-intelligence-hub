@@ -1,5 +1,5 @@
 import feedparser
-from datetime import datetime
+from datetime import datetime, timezone
 
 feeds = {
     "FCA (UK)": "https://www.fca.org.uk/news/rss.xml",
@@ -8,25 +8,27 @@ feeds = {
     "AP News Business": "https://apnews.com/hub/business?outputType=xml"
 }
 
-html_content = """
+last_updated = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+
+html_content = f"""
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>Live Regulatory Intelligence</title>
 <style>
-body { font-family: Arial; max-width: 900px; margin: auto; padding: 20px; }
-h1 { color: #1a1a1a; }
-h2 { margin-top: 30px; }
-ul { padding-left: 20px; }
-li { margin-bottom: 8px; }
-small { color: gray; }
+body {{ font-family: Arial; max-width: 900px; margin: auto; padding: 20px; }}
+h1 {{ color: #1a1a1a; }}
+h2 {{ margin-top: 30px; }}
+ul {{ padding-left: 20px; }}
+li {{ margin-bottom: 8px; }}
+small {{ color: gray; }}
 </style>
 </head>
 <body>
 <h1>Live Regulatory Intelligence</h1>
-<p><small>Last updated: {}</small></p>
-""".format(datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC"))
+<p><small>Last updated: {last_updated}</small></p>
+"""
 
 for source, url in feeds.items():
     feed = feedparser.parse(url)
