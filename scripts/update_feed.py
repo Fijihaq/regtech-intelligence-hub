@@ -32,6 +32,9 @@ small {{ color: gray; }}
 """
 
 fca_feed = feedparser.parse(feeds["FCA (UK)"])
+print("FCA feed status:", fca_feed.bozo, fca_feed.bozo_exception)
+print("Number of FCA entries:", len(fca_feed.entries))
+
 index_html += "<h2>FCA (UK)</h2><ul>"
 if fca_feed.entries:
     for entry in fca_feed.entries[:5]:
@@ -70,12 +73,15 @@ small {{ color: gray; }}
 """
 
 occ_feed = feedparser.parse(feeds["OCC (US)"])
+print("OCC feed status:", occ_feed.bozo, occ_feed.bozo_exception)
+print("Number of OCC entries:", len(occ_feed.entries))
+
 occ_html += "<h2>OCC (US)</h2><ul>"
 if occ_feed.entries:
     for entry in occ_feed.entries[:5]:
         occ_html += f'<li><a href="{entry.link}" target="_blank">{entry.title}</a></li>'
 else:
-    occ_html += "<li>No recent updates available.</li>"
+    occ_html += '<li>Unable to load OCC feed. <a href="https://www.occ.gov/news-events/newsroom/index.html" target="_blank">Visit OCC Newsroom</a></li>'
 occ_html += "</ul>"
 
 # Add navigation back to FCA page
