@@ -32,7 +32,9 @@ small {{ color: gray; }}
 """
 
 fca_feed = feedparser.parse(feeds["FCA (UK)"])
-print("FCA feed status:", fca_feed.bozo, fca_feed.bozo_exception)
+print("FCA feed status:", fca_feed.bozo)
+if hasattr(fca_feed, "bozo_exception") and fca_feed.bozo_exception:
+    print("FCA feed error:", fca_feed.bozo_exception)
 print("Number of FCA entries:", len(fca_feed.entries))
 
 index_html += "<h2>FCA (UK)</h2><ul>"
@@ -73,7 +75,9 @@ small {{ color: gray; }}
 """
 
 occ_feed = feedparser.parse(feeds["OCC (US)"])
-print("OCC feed status:", occ_feed.bozo, occ_feed.bozo_exception)
+print("OCC feed status:", occ_feed.bozo)
+if hasattr(occ_feed, "bozo_exception") and occ_feed.bozo_exception:
+    print("OCC feed error:", occ_feed.bozo_exception)
 print("Number of OCC entries:", len(occ_feed.entries))
 
 occ_html += "<h2>OCC (US)</h2><ul>"
