@@ -10,25 +10,33 @@
 
   <script>
     async function loadOCCFeed() {
-      const response = await fetch("https://www.occ.gov/rss/occ-news.xml");
-      const text = await response.text();
+      try {
+        // Fetch OCC RSS feed via AllOrigins proxy to bypass CORS
+        const response = await fetch("https://api.allorigins.win/get?url=https://www.occ.gov/rss/occ-news.xml");
+        const data = await response.json();
 
-      const parser = new DOMParser();
-      const xml = parser.parseFromString(text, "application/xml");
-      const items = xml.querySelectorAll("item");
+        const parser = new DOMParser();
+        const xml = parser.parseFromString(data.contents, "application/xml");
+        const items = xml.querySelectorAll("item");
 
-      const list = document.getElementById("occ-feed");
-      list.innerHTML = "";
+        const list = document.getElementById("occ-feed");
+        list.innerHTML = "";
 
-      items.forEach((item, index) => {
-        if (index < 5) { // show latest 5 updates
-          const title = item.querySelector("title").textContent;
-          const link = item.querySelector("link").textContent;
-          const li = document.createElement("li");
-          li.innerHTML = `<a href="${link}" target="_blank">${title}</a>`;
-          list.appendChild(li);
-        }
-      });
+        items.forEach((item, index) => {
+          if (index < 5) { // show latest 5 updates
+            const title = item.querySelector("title").textContent;
+            const link = item.querySelector("link").textContent;
+            const pubDate = item.querySelector("pubDate")?.textContent || "";
+
+            const li = document.createElement("li");
+            li.innerHTML = `<a href="${link}" target="_blank">${title}</a> <small>${pubDate}</small>`;
+            list.appendChild(li);
+          }
+        });
+      } catch (error) {
+        document.getElementById("occ-feed").innerHTML = "<li>Failed to load OCC feed.</li>";
+        console.error("Error loading OCC feed:", error);
+      }
     }
 
     loadOCCFeed();
