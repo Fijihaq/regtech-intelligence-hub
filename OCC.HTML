@@ -6,19 +6,32 @@
 </head>
 <body>
   <h2>Office of the Comptroller of the Currency (OCC) Updates</h2>
-  <div id="rss-feed-occ"></div>
+  <ul id="occ-feed"></ul>
 
-  <!-- RSS Embed Script -->
-  <script type="text/javascript" src="https://rss.app/embed/v1.js"></script>
-  <script type="text/javascript">
-    RSS.init({
-      target: "#rss-feed-occ",
-      url: "https://www.occ.gov/rss/occ-news.xml",  // OCC News feed
-      maxItems: 5,
-      showTitle: true,
-      showDate: true,
-      showDescription: true
-    });
+  <script>
+    async function loadOCCFeed() {
+      const response = await fetch("https://www.occ.gov/rss/occ-news.xml");
+      const text = await response.text();
+
+      const parser = new DOMParser();
+      const xml = parser.parseFromString(text, "application/xml");
+      const items = xml.querySelectorAll("item");
+
+      const list = document.getElementById("occ-feed");
+      list.innerHTML = "";
+
+      items.forEach((item, index) => {
+        if (index < 5) { // show latest 5 updates
+          const title = item.querySelector("title").textContent;
+          const link = item.querySelector("link").textContent;
+          const li = document.createElement("li");
+          li.innerHTML = `<a href="${link}" target="_blank">${title}</a>`;
+          list.appendChild(li);
+        }
+      });
+    }
+
+    loadOCCFeed();
   </script>
 </body>
 </html>
