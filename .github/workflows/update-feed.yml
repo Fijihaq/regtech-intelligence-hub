@@ -2,7 +2,7 @@ name: Auto Update Feed
 
 on:
   schedule:
-    - cron: "*/30 * * * *"
+    - cron: "*/30 * * * *"   # runs every 30 minutes
   workflow_dispatch:
 
 jobs:
@@ -28,6 +28,6 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "github-actions"
-          git add index.html
-          git commit -m "Auto update feed" || echo "No changes to commit"
+          git add index.html OCC.html   # include OCC.html here
+          git commit -m "Auto update feed (index + OCC)" || echo "No changes to commit"
           git push
