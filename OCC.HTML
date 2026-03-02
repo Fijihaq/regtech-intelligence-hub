@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>OCC Updates</title>
+</head>
+<body>
+  <h2>Office of the Comptroller of the Currency (OCC) Updates</h2>
+  <div id="rss-feed-occ"></div>
+
+  <!-- RSS Embed Script -->
+  <script type="text/javascript" src="https://rss.app/embed/v1.js"></script>
+  <script type="text/javascript">
+    RSS.init({
+      target: "#rss-feed-occ",
+      url: "https://www.occ.gov/rss/occ-news.xml",  // OCC News feed
+      maxItems: 5,
+      showTitle: true,
+      showDate: true,
+      showDescription: true
+    });
+  </script>
+</body>
+</html>
