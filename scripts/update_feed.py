@@ -35,10 +35,14 @@ fca_feed = feedparser.parse(feeds["FCA (UK)"])
 index_html += "<h2>FCA (UK)</h2><ul>"
 if fca_feed.entries:
     for entry in fca_feed.entries[:5]:
-        index_html += f'<li>{entry.title}</li>'
+        index_html += f'<li><a href="{entry.link}" target="_blank">{entry.title}</a></li>'
 else:
     index_html += "<li>No recent updates available.</li>"
-index_html += "</ul></body></html>"
+index_html += "</ul>"
+
+# Add navigation link to OCC page
+index_html += '<p><a href="OCC.html">View OCC Regulatory Intelligence</a></p>'
+index_html += "</body></html>"
 
 with open("index.html", "w", encoding="utf-8") as f:
     f.write(index_html)
@@ -69,10 +73,14 @@ occ_feed = feedparser.parse(feeds["OCC (US)"])
 occ_html += "<h2>OCC (US)</h2><ul>"
 if occ_feed.entries:
     for entry in occ_feed.entries[:5]:
-        occ_html += f'<li>{entry.title}</li>'
+        occ_html += f'<li><a href="{entry.link}" target="_blank">{entry.title}</a></li>'
 else:
     occ_html += "<li>No recent updates available.</li>"
-occ_html += "</ul></body></html>"
+occ_html += "</ul>"
+
+# Add navigation back to FCA page
+occ_html += '<p><a href="index.html">Back to FCA Regulatory Intelligence</a></p>'
+occ_html += "</body></html>"
 
 with open("OCC.html", "w", encoding="utf-8") as f:
     f.write(occ_html)
