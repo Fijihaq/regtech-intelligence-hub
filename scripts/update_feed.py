@@ -1,21 +1,22 @@
 import feedparser
 from datetime import datetime, timezone
 
+# Define feeds
 feeds = {
     "FCA (UK)": "https://www.fca.org.uk/news/rss.xml",
-    "Bank of England (UK)": "https://www.bankofengland.co.uk/news/rss",
-    "Reuters Business": "https://feeds.reuters.com/reuters/businessNews",
-    "AP News Business": "https://apnews.com/hub/business?outputType=xml"
+    "OCC (US)": "https://www.occ.gov/rss/occ-news.xml"
 }
 
 last_updated = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
 
-html_content = f"""
-<!DOCTYPE html>
+# -------------------------------
+# Build index.html (FCA only)
+# -------------------------------
+index_html = f"""<!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Live Regulatory Intelligence</title>
+<title>FCA Regulatory Intelligence</title>
 <style>
 body {{ font-family: Arial; max-width: 900px; margin: auto; padding: 20px; }}
 h1 {{ color: #1a1a1a; }}
@@ -26,23 +27,52 @@ small {{ color: gray; }}
 </style>
 </head>
 <body>
-<h1>Live Regulatory Intelligence</h1>
+<h1>FCA Regulatory Intelligence</h1>
 <p><small>Last updated: {last_updated}</small></p>
 """
 
-for source, url in feeds.items():
-    feed = feedparser.parse(url)
-    html_content += f"<h2>{source}</h2><ul>"
-
-    if feed.entries:
-        for entry in feed.entries[:5]:
-            html_content += f'<li><a href="{entry.link}" target="_blank">{entry.title}</a></li>'
-    else:
-        html_content += "<li>No recent updates available.</li>"
-
-    html_content += "</ul>"
-
-html_content += "</body></html>"
+fca_feed = feedparser.parse(feeds["FCA (UK)"])
+index_html += "<h2>FCA (UK)</h2><ul>"
+if fca_feed.entries:
+    for entry in fca_feed.entries[:5]:
+        index_html += f'<li>{entry.title}</li>'
+else:
+    index_html += "<li>No recent updates available.</li>"
+index_html += "</ul></body></html>"
 
 with open("index.html", "w", encoding="utf-8") as f:
-    f.write(html_content)
+    f.write(index_html)
+
+# -------------------------------
+# Build OCC.html (OCC only)
+# -------------------------------
+occ_html = f"""<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>OCC Regulatory Intelligence</title>
+<style>
+body {{ font-family: Arial; max-width: 900px; margin: auto; padding: 20px; }}
+h1 {{ color: #1a1a1a; }}
+h2 {{ margin-top: 30px; }}
+ul {{ padding-left: 20px; }}
+li {{ margin-bottom: 8px; }}
+small {{ color: gray; }}
+</style>
+</head>
+<body>
+<h1>OCC Regulatory Intelligence</h1>
+<p><small>Last updated: {last_updated}</small></p>
+"""
+
+occ_feed = feedparser.parse(feeds["OCC (US)"])
+occ_html += "<h2>OCC (US)</h2><ul>"
+if occ_feed.entries:
+    for entry in occ_feed.entries[:5]:
+        occ_html += f'<li>{entry.title}</li>'
+else:
+    occ_html += "<li>No recent updates available.</li>"
+occ_html += "</ul></body></html>"
+
+with open("OCC.html", "w", encoding="utf-8") as f:
+    f.write(occ_html)
